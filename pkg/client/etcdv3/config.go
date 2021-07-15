@@ -15,6 +15,7 @@
 package etcdv3
 
 import (
+	"github.com/coreos/etcd/pkg/logutil"
 	"time"
 
 	"github.com/douyu/jupiter/pkg/conf"
@@ -43,6 +44,16 @@ type (
 		AutoSyncInterval time.Duration `json:"autoAsyncInterval"`
 		TTL              int           // 单位：s
 		logger           *xlog.Logger
+
+		// 是否开启读取log配置
+		Enable     		 bool     `json:"enable"`
+		Level            string   `json:"level"`
+		Debug            bool     `json:"debug"`
+		Encoding         string   `json:"encoding" yaml:"encoding"`
+		Initial          int      `json:"initial"`
+		Thereafter       int      `json:"thereafter"`
+		OutputPaths      []string `json:"outputPaths" yaml:"outputPaths"`
+		ErrorOutputPaths []string `json:"errorOutputPaths" yaml:"errorOutputPaths"`
 	}
 )
 
@@ -52,6 +63,9 @@ func DefaultConfig() *Config {
 		BasicAuth:      false,
 		ConnectTimeout: xtime.Duration("5s"),
 		Secure:         false,
+		Enable: 		false,
+		Level:          logutil.DefaultLogLevel,
+		Encoding:       "json",
 		logger:         xlog.JupiterLogger.With(xlog.FieldMod("client.etcd")),
 	}
 }
